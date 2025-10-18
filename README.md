@@ -26,7 +26,7 @@ mysqlConnection={
 "database":"<databasewhichcreatedearlier>"
 } # mysql connection variables
 
-csvDataPath=r"C:\temp\file.csv" # path of data
+csvDataPath=r"C:\temp" # path of data
 successCSVFileMovePath=r"c:\temp\completed" # path of folder where file will move after completion of upload
 validProvince=['NewDelhi', 'Lucknow', 'UP', 'Mumbai', 'Keral'] # filtering valid data from csv file
 totalRecords=0 # Variables for total records of csv which will use later
