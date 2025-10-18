@@ -89,7 +89,8 @@ if __name__=="__main__":
     timeDifference=endtime-starttime #store difference of datetime start and end of execution
     summary={"TotalRecordsInCsv":totalRecords,"ProcessedRecords":totalRecords-rejectedcount,
              "RejectedCount":rejectedcount,"TotalProcessedTimeInSeconds":timeDifference.total_seconds()}
-    shutil.move(csvDataPath, os.path.join(successCSVFileMovePath, os.path.basename(csvDataPath))) # move file to completed directory
+    shutil.move(csvDataPath, os.path.join(successCSVFileMovePath, os.path.basename((csvDataPath+"_"+datetime.datetime.now().strftime("%Y%m%d"))))) # move file to completed directory
     SendMail(str(summary),"Shipment Upload Summary!") # send mail of upload report
+
 
 
