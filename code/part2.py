@@ -14,7 +14,7 @@ mysqlConnection={
 "port":'<mysqlport>',
 "database":"<mysqldatabase>"
 } # mysql connection variables
-csvDataPath=r"C:\temp\file.csv" # path of data
+csvDataPath=r"C:\temp" # path of data
 successCSVFileMovePath=r"c:\temp\completed" # path of folder where file will move after completion of upload
 validProvince=['NewDelhi', 'Lucknow', 'UP', 'Mumbai', 'Keral'] # filtering valid data from csv file
 totalRecords=0 # Variables for total records of csv which will use later
@@ -82,15 +82,15 @@ def SendMail(mailbody, subjectline):
 
 if __name__=="__main__":
     os.makedirs(successCSVFileMovePath, exist_ok=True) # Checked fodler available if not create folder.
-    starttime=datetime.datetime.now() #store datetime in variable of start time of execution
-    validdata=CleanData(csvDataPath) # validate data remove duplicate and validate with province
-    rejectedcount=LoadDataToMysql(validdata)
-    endtime=datetime.datetime.now() #store date time in variable of execution completed
-    timeDifference=endtime-starttime #store difference of datetime start and end of execution
-    summary={"TotalRecordsInCsv":totalRecords,"ProcessedRecords":totalRecords-rejectedcount,
-             "RejectedCount":rejectedcount,"TotalProcessedTimeInSeconds":timeDifference.total_seconds()}
-    shutil.move(csvDataPath, os.path.join(successCSVFileMovePath, os.path.basename((csvDataPath+"_"+datetime.datetime.now().strftime("%Y%m%d"))))) # move file to completed directory
-    SendMail(str(summary),"Shipment Upload Summary!") # send mail of upload report
-
-
-
+    for file in os.listdir(csvDataPath):
+    if file.endswith(".csv"):
+        filepath=os.path.join(csvDataPath,file)
+        starttime=datetime.datetime.now() #store datetime in variable of start time of execution
+        validdata=CleanData(filepath) # validate data remove duplicate and validate with province
+        rejectedcount=LoadDataToMysql(validdata)
+        endtime=datetime.datetime.now() #store date time in variable of execution completed
+        timeDifference=endtime-starttime #store difference of datetime start and end of execution
+        summary={"TotalRecordsInCsv":totalRecords,"ProcessedRecords":totalRecords-rejectedcount,
+         "RejectedCount":rejectedcount,"TotalProcessedTimeInSeconds":timeDifference.total_seconds()}
+        shutil.move(filepath, os.path.join(successCSVFileMovePath, os.path.basename((filepath.replace(".csv","")+"_"+datetime.datetime.now().strftime("%Y%m%d"))))+".csv") # move file to completed directory
+        SendMail(str(summary),"Shipment Upload Summary!") # send mail of upload report
